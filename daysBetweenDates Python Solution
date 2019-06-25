@@ -1,0 +1,62 @@
+# I came across this problem set in Udacity posted by Websten.
+# Saw several solutions but wanted to post another way to solve this as shown below.
+# Btw, days between (1900,1,1,1999,12,31) should be 36524 and NOT 36523 as written in the problem set argument.
+
+# By Websten from forums
+#
+# Given your birthday and the current date, calculate your age in days. 
+# Account for leap days. 
+#
+# Assume that the birthday and current date are correct dates (and no 
+# time travel). 
+#
+def daysBetweenDates(year1, month1, day1, year2, month2, day2):
+    days_of_months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    total_days = 0
+    for year in range(year1, year2 + 1):
+        if year % 4 == 0:
+            days_of_months[1] = 29
+            days = sum(days_of_months)
+            total_days = total_days + days
+        else:
+            days_of_months[1] = 28
+            days = sum(days_of_months)
+            total_days = total_days + days
+    year = year + 1
+
+# We need to deduct the number of days in a year preceeding the date in year1
+    if year1%4 == 0:
+        days_of_months[1] = 29
+        number_Of_days1 = sum(days_of_months[0:month1-1]) + day1
+    else:
+        days_of_months[1] = 28
+        number_Of_days1 = sum(days_of_months[0:month1-1]) + day1
+ 
+ # We need to deduct the number of days in a year following the date in year2
+    if year2%4 == 0:
+        days_of_months[1] = 29    
+        number_Of_days2 = sum(days_of_months[month2-1:]) - day2
+    else:
+        days_of_months[1] = 28    
+        number_Of_days2 = sum(days_of_months[month2-1:]) - day2
+
+    total_days = total_days - number_Of_days1 - number_Of_days2
+
+    return total_days
+
+# Test routine
+
+def test():
+    test_cases = [((2012,1,1,2012,2,28), 58), 
+                  ((2012,1,1,2012,3,1), 60),
+                  ((2011,6,30,2012,6,30), 366),
+                  ((2011,1,1,2012,8,8), 585 ),
+                  ((1900,1,1,1999,12,31), 36523)]
+    for (args, answer) in test_cases:
+        result = daysBetweenDates(*args)
+        if result != answer:
+            print "Test with data:", args, "failed"
+        else:
+            print "Test case passed!"
+
+test()
